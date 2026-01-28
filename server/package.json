@@ -1,0 +1,25 @@
+{
+  "name": "audio-presets-server",
+  "version": "1.0.0",
+  "description": "REST API server for audio presets",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node scripts/seed.js"
+  },
+  "keywords": [
+    "audio",
+    "presets",
+    "rest",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.18.2",
+    "mongoose": "^9.1.5",
+    "multer": "^2.0.2"
+  }
+}

@@ -1,0 +1,141 @@
+:root {
+    --bg-color: #121212;
+    --surface-color: #1e1e1e;
+    --primary-color: #00ffcc;
+    --text-color: #ffffff;
+    --pad-bg: #2a2a2a;
+    --pad-active: #00ffcc;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-weight: 300;
+}
+
+#controls {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+select {
+    padding: 10px;
+    background: var(--surface-color);
+    border: 1px solid #333;
+    color: white;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+#pads-container {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 10px;
+    padding: 20px;
+    background: var(--surface-color);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: opacity 0.3s;
+}
+
+#pads-container.loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.pad {
+    background-color: var(--pad-bg);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: all 0.1s;
+    border: 2px solid transparent;
+}
+
+.pad:hover {
+    filter: brightness(1.2);
+}
+
+.pad.loaded {
+    border-color: #444;
+}
+
+.pad.active {
+    background-color: var(--primary-color);
+    color: #000;
+    transform: scale(0.95);
+    box-shadow: 0 0 15px var(--primary-color);
+}
+
+.pad.selected {
+    border-color: var(--primary-color);
+    box-shadow: inset 0 0 10px rgba(0, 255, 204, 0.3);
+}
+
+.pad.error {
+    border-color: #ff4444;
+    color: #ff4444;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#visualizer {
+    margin-top: 20px;
+    width: 320px;
+    height: 100px;
+    background: #000;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#record-btn {
+    background: #444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#record-btn.recording {
+    background: #ff4444;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+}

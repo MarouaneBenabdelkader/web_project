@@ -1,0 +1,42 @@
+<div class="container">
+    <h2>Create New Preset</h2>
+
+    <div class="form-group">
+        <label>Name:</label>
+        <input [(ngModel)]="name" type="text" placeholder="Preset Name">
+    </div>
+
+    <div class="form-group">
+        <label>Category:</label>
+        <select [(ngModel)]="category">
+            <option>Drums</option>
+            <option>Percussion</option>
+            <option>Piano</option>
+            <option>Synth</option>
+            <option>FX</option>
+        </select>
+    </div>
+
+    <h3>Sound Mapping</h3>
+    <div class="grid">
+        <div *ngFor="let pad of pads" class="pad-config">
+            <h4>{{ pad.id }} ({{ pad.name }})</h4>
+            <div class="row">
+                <select [(ngModel)]="pad.type">
+                    <option value="url">URL Link</option>
+                    <option value="file">Upload File</option>
+                </select>
+
+                <input *ngIf="pad.type === 'url'" [(ngModel)]="pad.value" type="text"
+                    placeholder="https://example.com/sound.mp3">
+                <input *ngIf="pad.type === 'file'" (change)="onFileSelected($event, pad.id)" type="file"
+                    accept="audio/*">
+            </div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button (click)="submit()" [disabled]="!name">Create Preset</button>
+        <a routerLink="/">Cancel</a>
+    </div>
+</div>

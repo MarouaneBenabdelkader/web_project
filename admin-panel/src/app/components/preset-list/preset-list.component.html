@@ -1,0 +1,30 @@
+<div class="container">
+    <h2>Preset Admin</h2>
+    <a routerLink="/create" class="button-link">Create New Preset</a>
+
+    <div *ngIf="loading">Loading...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <table *ngIf="!loading && !error">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Sounds</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let preset of presets">
+                <td>{{ preset.name }}</td>
+                <td>{{ preset.category }}</td>
+                <td>{{ preset.sounds.length }} pads</td>
+                <td>
+                    <a [routerLink]="['/preview', preset._id]" class="btn-preview">Preview</a>
+                    <button (click)="rename(preset)">Rename</button>
+                    <button (click)="delete(preset._id)" class="danger">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

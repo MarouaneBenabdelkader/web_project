@@ -1,0 +1,27 @@
+<div class="container">
+    <h2>Preview: {{ preset?.name }}</h2>
+
+    <div *ngIf="loading">Loading sounds...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <div class="grid" *ngIf="!loading && !error">
+        <!-- Top Row -->
+        <button [class.loaded]="isLoaded('pad7')" (click)="playSound('pad7')">7: {{ getPadName('pad7') }}</button>
+        <button [class.loaded]="isLoaded('pad8')" (click)="playSound('pad8')">8: {{ getPadName('pad8') }}</button>
+        <button [class.loaded]="isLoaded('pad9')" (click)="playSound('pad9')">9: {{ getPadName('pad9') }}</button>
+
+        <!-- Mid Row -->
+        <button [class.loaded]="isLoaded('pad4')" (click)="playSound('pad4')">4: {{ getPadName('pad4') }}</button>
+        <button [class.loaded]="isLoaded('pad5')" (click)="playSound('pad5')">5: {{ getPadName('pad5') }}</button>
+        <button [class.loaded]="isLoaded('pad6')" (click)="playSound('pad6')">6: {{ getPadName('pad6') }}</button>
+
+        <!-- Bottom Row -->
+        <button [class.loaded]="isLoaded('pad1')" (click)="playSound('pad1')">1: {{ getPadName('pad1') }}</button>
+        <button [class.loaded]="isLoaded('pad2')" (click)="playSound('pad2')">2: {{ getPadName('pad2') }}</button>
+        <button [class.loaded]="isLoaded('pad3')" (click)="playSound('pad3')">3: {{ getPadName('pad3') }}</button>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <a routerLink="/" class="btn-back">&larr; Back to List</a>
+    </div>
+</div>
