@@ -11,34 +11,12 @@
 </head>
 
 <body>
-    <h1>JS Sampler</h1>
+    <!-- Web Component Version - Encapsulated Sampler -->
+    <sampler-pad></sampler-pad>
 
-    <div id="controls">
-        <select id="preset-select">
-            <option value="" disabled selected>Loading Presets...</option>
-        </select>
-    </div>
-
-    <div id="pads-container">
-        <!-- Pads injected by JS -->
-    </div>
-
-    <div id="visualizer">
-        <canvas id="waveform"></canvas>
-    </div>
-
-    <div id="params-container" style="opacity: 0; transition: opacity 0.3s; margin-top: 10px; width: 320px;">
-        <button id="record-btn" style="width: 100%; margin-bottom: 10px; padding: 10px;">Record Mic (Assign to
-            Selected)</button>
-        <div style="display: flex; gap: 10px; flex-direction: column;">
-            <label style="display: flex; justify-content: space-between;">Start <input type="range" id="start-slider"
-                    min="0" max="1" step="0.01" value="0"></label>
-            <label style="display: flex; justify-content: space-between;">End <input type="range" id="end-slider"
-                    min="0" max="1" step="0.01" value="1"></label>
-        </div>
-    </div>
-
-    <script type="module" src="src/main.js"></script>
+    <script type="module">
+        import './src/SamplerComponent.js';
+    </script>
 </body>
 
 </html>

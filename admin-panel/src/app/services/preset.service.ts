@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
     providedIn: 'root'
 })
 export class PresetService {
-    private apiUrl = 'http://localhost:3000/api/presets';
+    private apiUrl = 'https://web-sampler.onrender.com/api/presets';
 
     constructor(private http: HttpClient) { }
 

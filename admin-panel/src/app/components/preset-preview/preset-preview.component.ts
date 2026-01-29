@@ -63,7 +63,7 @@ export class PresetPreviewComponent implements OnInit, OnDestroy {
                 // Handle relative vs absolute paths
                 let url = sound.path;
                 if (url.startsWith('/uploads')) {
-                    url = `http://localhost:3000${url}`;
+                    url = `https://web-sampler.onrender.com${url}`;
                 }
 
                 const response = await fetch(url);

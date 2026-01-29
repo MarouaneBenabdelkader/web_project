@@ -31,27 +31,44 @@ exports.getPresetById = async (req, res) => {
 // @desc    Create new preset
 // @route   POST /api/presets
 // @access  Public
-// @note    Expects multipart/form-data with 'files' (audio) and 'data' (JSON string of preset metadata)
-//          The 'data' JSON should have pads mapped by FILENAME, e.g. "pads": { "pad1": "kick.wav" }
-//          The controller will map the actual stored filename to the pad.
+// @note    Supports two formats:
+//          1. Legacy: 'data' (JSON string) with preset info
+//          2. New: 'name', 'category', 'soundsInfo' (JSON string) as separate fields
 exports.createPreset = async (req, res) => {
     try {
-        // 1. Parse the preset data
-        if (!req.body.data) {
-            return res.status(400).json({ message: 'Missing preset data (JSON string field "data")' });
-        }
+        let presetData = {};
+        let soundsInfo = [];
 
-        let presetData;
-        try {
-            presetData = JSON.parse(req.body.data);
-        } catch (e) {
-            return res.status(400).json({ message: 'Invalid JSON in "data" field' });
+        // Format 1: Legacy - parse from 'data' field
+        if (req.body.data) {
+            try {
+                presetData = JSON.parse(req.body.data);
+                soundsInfo = presetData.sounds || [];
+            } catch (e) {
+                return res.status(400).json({ message: 'Invalid JSON in "data" field' });
+            }
+        }
+        // Format 2: New - separate fields
+        else if (req.body.name) {
+            presetData = {
+                name: req.body.name,
+                category: req.body.category || 'other',
+                description: req.body.description || ''
+            };
+            
+            // Parse soundsInfo if provided
+            if (req.body.soundsInfo) {
+                try {
+                    soundsInfo = JSON.parse(req.body.soundsInfo);
+                } catch (e) {
+                    return res.status(400).json({ message: 'Invalid JSON in "soundsInfo" field' });
+                }
+            }
+        } else {
+            return res.status(400).json({ message: 'Missing preset data. Provide "data" JSON or "name" field.' });
         }
 
         const uploadedFiles = req.files || [];
-
-        // 2. Map uploaded files AND/OR existing URLs to pads
-        const soundsArray = [];
 
         // Create a map of originalName -> fileObject for easy lookup
         const fileMap = {};
@@ -59,20 +76,25 @@ exports.createPreset = async (req, res) => {
             fileMap[file.originalname] = file;
         });
 
-        if (presetData.sounds && Array.isArray(presetData.sounds)) {
-            presetData.sounds.forEach(soundItem => {
-                // soundItem: { padId: 'pad1', fileName: 'kick.wav', path: 'http://...' }
+        // Build sounds array
+        const soundsArray = [];
 
-                // Case A: File was uploaded
-                if (soundItem.fileName && fileMap[soundItem.fileName]) {
-                    const matchingFile = fileMap[soundItem.fileName];
+        // If soundsInfo provided, map files to pads
+        if (soundsInfo && Array.isArray(soundsInfo) && soundsInfo.length > 0) {
+            soundsInfo.forEach(soundItem => {
+                // Case A: File was uploaded - match by padId (e.g., "pad1.wav")
+                const matchingFile = fileMap[`${soundItem.padId}.wav`] || 
+                                    fileMap[soundItem.fileName] ||
+                                    uploadedFiles.find(f => f.originalname.startsWith(soundItem.padId));
+                
+                if (matchingFile) {
                     soundsArray.push({
                         padId: soundItem.padId,
-                        name: soundItem.name || soundItem.fileName,
-                        path: `/uploads/${matchingFile.filename}` // Local path
+                        name: soundItem.name || soundItem.padId,
+                        path: `/uploads/${matchingFile.filename}`
                     });
                 }
-                // Case B: Direct URL provided (no upload needed)
+                // Case B: Direct URL provided
                 else if (soundItem.path) {
                     soundsArray.push({
                         padId: soundItem.padId,
@@ -82,16 +104,22 @@ exports.createPreset = async (req, res) => {
                 }
             });
         }
+        // Fallback: If no soundsInfo but files uploaded, assign by order
+        else if (uploadedFiles.length > 0) {
+            uploadedFiles.forEach((file, index) => {
+                soundsArray.push({
+                    padId: `pad${index + 1}`,
+                    name: file.originalname.replace(/\.[^/.]+$/, ''), // Remove extension
+                    path: `/uploads/${file.filename}`
+                });
+            });
+        }
 
         if (soundsArray.length === 0) {
             return res.status(400).json({ message: 'No valid sounds provided (files or URLs)' });
         }
-        // Fallback: If no explicit mapping provided, just assign sequentially (less safe but works for simple tests)
-        else {
-            // Basic fallback not implemented to enforce structured data
-        }
 
-        // 3. Create the Preset document
+        // Create the Preset document
         const newPreset = new Preset({
             name: presetData.name,
             category: presetData.category,
