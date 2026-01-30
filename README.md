@@ -5,7 +5,7 @@ Un sampler audio interactif développé en JavaScript vanilla avec Web Audio API
 **Projet réalisé dans le cadre du cours de Développement Web - Master 1**
 
 🔗 **Démo Sampler** : [https://web-sampler-frontend.onrender.com](https://web-sampler-frontend.onrender.com)  
-🔗 **Admin Panel Angular** : [https://web-sampler-admin.onrender.com](https://web-sampler-admin.onrender.com)  
+🔗 **Admin Panel Angular** : [https://web-sampler-1.onrender.com](https://web-sampler-1.onrender.com)  
 🔗 **API Backend** : [https://web-sampler.onrender.com](https://web-sampler.onrender.com)
 
 ---
